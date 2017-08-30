@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES5",
+    "jsx": "react",
+    "outDir": "lib",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "lib": [
+      "dom",
+      "es2015",
+      "es5",
+      "es6"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "webpack.config.js",
+    "node_modules",
+    "lib"
+  ]
+}
