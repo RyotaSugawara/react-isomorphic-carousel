@@ -2,7 +2,7 @@
   "name": "react-isomorphic-carousel",
   "version": "0.0.0",
   "description": "Isomorphic React Carousel Component.",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "tsc"
