@@ -1,10 +1,11 @@
 {
-  "name": "react-isomorphic-carousel",
+  "name": "@ryo_suga/react-isomorphic-carousel",
   "version": "0.0.0",
   "description": "Isomorphic React Carousel Component.",
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server",
+    "prepublish": "npm run build",
     "build": "tsc"
   },
   "repository": {
@@ -34,5 +35,6 @@
     "typescript": "^2.4.2",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
-  }
+  },
+  "dependencies": {}
 }
