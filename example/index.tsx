@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { Carousel } from '../src';
+import Carousel from '../src';
 
 class App extends React.Component {
   carousel;
@@ -17,9 +17,9 @@ class App extends React.Component {
     setTimeout(() => {
       this.setState({
         count: [
+          ...this.state.count,
           'efghi',
-          'jklmn',
-          ...this.state.count
+          'jklmn'
         ]
       });
     }, 1000);

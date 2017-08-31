@@ -6,7 +6,10 @@
   "scripts": {
     "start": "webpack-dev-server",
     "prepublish": "npm run build",
-    "build": "tsc"
+    "build": "tsc",
+    "test:dom": "USE_DOM=true ava **/*.dom.test.js",
+    "test:node": "ava **/*.node.test.js",
+    "test": "tsc && npm run test:dom && npm run test:node"
   },
   "repository": {
     "type": "git",
@@ -25,10 +28,15 @@
   "devDependencies": {
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
+    "@types/react-test-renderer": "^15.5.4",
+    "ava": "^0.22.0",
+    "browser-env": "^3.2.0",
     "html-webpack-plugin": "^2.30.1",
+    "jest": "^20.0.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
     "ts-loader": "^2.3.4",
     "tslint": "^5.7.0",
     "tslint-react": "^3.2.0",
@@ -36,5 +44,9 @@
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
   },
-  "dependencies": {}
+  "ava": {
+    "require": [
+      "./test/helpers/setup-browser-env.js"
+    ]
+  }
 }

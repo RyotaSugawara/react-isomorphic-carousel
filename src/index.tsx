@@ -108,7 +108,9 @@ export class Carousel extends React.Component<Props, State> {
 
   renderInitialRect() {
     return (
-      <li>{this.props.children[0]}</li>
+      <li style={{width: '100%'}}>
+        {this.props.children[0]}
+      </li>
     );
   }
 
@@ -326,6 +328,9 @@ export class Carousel extends React.Component<Props, State> {
   }
 
   initialize() {
+    if (!this.container) {
+      return;
+    }
     this.updateFrameRect();
     const imgs = this.container.getElementsByTagName('img');
     for (let i = 0; i < imgs.length; i++) {
@@ -416,3 +421,5 @@ export class Carousel extends React.Component<Props, State> {
     return 0;
   }
 }
+
+export default Carousel;
