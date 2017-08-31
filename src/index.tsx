@@ -49,7 +49,7 @@ export class Carousel extends React.Component<Props, State> {
   static get defaultProps() {
     return {
       label: '',
-      useDots: true,
+      useDots: false,
       dotStyle: {},
       duration: 500, // ms
       autoSlideInterval: 0, // ms
@@ -136,7 +136,7 @@ export class Carousel extends React.Component<Props, State> {
   }
 
   renderDots() {
-    if (!this.props.useDots) {
+    if (!this.props.useDots || this.state.slideCount <= 1) {
       return null;
     }
     return (
@@ -230,7 +230,7 @@ export class Carousel extends React.Component<Props, State> {
       position: 'relative',
       overflow: 'hidden',
       width: 'auto',
-      height: this.state.slideHeight,
+      height: (this.state.slideCount > 1) ? this.state.slideHeight : 'auto',
       transform: 'translate3d(0, 0, 0)',
       WebkitTransform: 'translate3d(0, 0, 0)',
       msTransform: 'translate(0, 0)'
@@ -256,7 +256,7 @@ export class Carousel extends React.Component<Props, State> {
       }
     }
     return {
-      position: this.state.canUseDOM ? 'absolute' : 'relative',
+      position: (this.state.canUseDOM && this.state.slideCount > 1) ? 'absolute' : 'relative',
       display: canDisplay ? 'block' : 'none',
       width: '100%',
       top: 0,
