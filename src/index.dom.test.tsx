@@ -15,5 +15,5 @@ test('should render', (t) => {
     </Carousel>
   ).toJSON();
   t.is(instance.children[0]['type'], 'ul');
-  t.is(instance.children[0].children[0].children[0], 'img');
+  t.is(instance.children[0].children[0].children[0].type, 'img');
 });

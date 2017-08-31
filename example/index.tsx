@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import Carousel from '../src';
 
 class App extends React.Component {
-  carousel;
+  carousel: Carousel;
   state = {
     count: ['abcd']
   };
@@ -19,7 +19,10 @@ class App extends React.Component {
         count: [
           ...this.state.count,
           'efghi',
-          'jklmn'
+          'jklmn',
+          'opqrs',
+          'tuvwx',
+          'yz'
         ]
       });
     }, 1000);

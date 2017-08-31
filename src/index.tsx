@@ -9,6 +9,9 @@ interface Touch {
 }
 
 interface Props {
+  label?: string;
+  useDots?: boolean;
+  dotStyle?: any;
   duration?: number;
   autoSlideInterval?: number;
 }
@@ -21,8 +24,7 @@ interface State {
   slideWidth: any;
   slideHeight: any;
   swipePosition: number;
-  showNextSlide: boolean;
-  showPrevSlide: boolean;
+  showIndex: number;
 }
 
 export class Carousel extends React.Component<Props, State> {
@@ -33,7 +35,7 @@ export class Carousel extends React.Component<Props, State> {
   touch: Touch;
   timer;
 
-  state = {
+  state: State = {
     animate: false,
     canUseDOM: false,
     currentIndex: 0,
@@ -41,12 +43,14 @@ export class Carousel extends React.Component<Props, State> {
     slideWidth: null,
     slideHeight: null,
     swipePosition: 0,
-    showNextSlide: false,
-    showPrevSlide: false
+    showIndex: null
   };
 
   static get defaultProps() {
     return {
+      label: '',
+      useDots: true,
+      dotStyle: {},
       duration: 500, // ms
       autoSlideInterval: 0, // ms
     };
@@ -102,6 +106,7 @@ export class Carousel extends React.Component<Props, State> {
         >
           {this.renderCarouselChild()}
         </ul>
+        {this.renderDots()}
       </div>
     );
   }
@@ -128,6 +133,51 @@ export class Carousel extends React.Component<Props, State> {
         </li>
       );
     });
+  }
+
+  renderDots() {
+    if (!this.props.useDots) {
+      return null;
+    }
+    return (
+      <ul
+        className="Carousel_Dots"
+        style={{
+          textAlign: 'center'
+        }}
+      >
+        {React.Children.map(this.props.children, (child: any, index) => {
+          const isActive = this.state.currentIndex === index;
+          return (
+            <li
+              className="Carousel_Dot"
+              key={`dot-${child.key}`}
+              style={{
+                display: 'inline-block',
+                listStyleType: 'none'
+              }}
+            >
+              <button
+                onClick={() => this.move(index)}
+                aria-label={`Move ${this.props.label} carousel current index to ${index}.`}
+                className="Carousel_Dot_Button"
+                disabled={isActive}
+                style={{
+                  background: isActive ? '#000' : '#ccc',
+                  lineHeight: 10,
+                  border: 0,
+                  borderRadius: '10px',
+                  padding: 5,
+                  margin: '0 4px',
+                  cursor: 'pointer',
+                  ...this.props.dotStyle
+                }}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    );
   }
 
   /* other methods */
@@ -191,17 +241,18 @@ export class Carousel extends React.Component<Props, State> {
     const canDisplay = this.canDisplaySlide(index);
     const duration = this.swiping ? 0 : this.props.duration / 1000; // to milisec
     const transition = this.state.animate ? `transform ${duration}s ease` : null;
+    const direction = this.getIndexDirection(index);
     let transform, msTransform;
     if (canDisplay) {
-      if (this.state.showNextSlide && this.getNextIndex() === index) {
-        transform = `translate3d(${this.state.swipePosition + this.state.slideWidth}px, 0px, 1px)`;
-        msTransform = `translate(${this.state.swipePosition + this.state.slideWidth}px, 0px)`;
-      } else if (this.state.showPrevSlide && this.getPrevIndex() === index) {
-        transform = `translate3d(${this.state.swipePosition - this.state.slideWidth}px, 0px, 1px)`;
-        msTransform = `translate3d(${this.state.swipePosition - this.state.slideWidth}px, 0px)`;
-      } else if (this.state.currentIndex === index) {
+      if (direction === 0) {
         transform = `translate3d(${this.state.swipePosition}px, 0px, 1px)`;
         msTransform = `translate3d(${this.state.swipePosition}px, 0px)`;
+      } else if (direction === 1) {
+        transform = `translate3d(${this.state.swipePosition + this.state.slideWidth}px, 0px, 1px)`;
+        msTransform = `translate(${this.state.swipePosition + this.state.slideWidth}px, 0px)`;
+      } else if (direction === -1) {
+        transform = `translate3d(${this.state.swipePosition - this.state.slideWidth}px, 0px, 1px)`;
+        msTransform = `translate3d(${this.state.swipePosition - this.state.slideWidth}px, 0px)`;
       }
     }
     return {
@@ -228,11 +279,7 @@ export class Carousel extends React.Component<Props, State> {
       return false;
     }
 
-    if (this.state.showNextSlide && this.getNextIndex() === index) {
-      return true;
-    }
-
-    if (this.state.showPrevSlide && this.getPrevIndex() === index) {
+    if (this.state.showIndex === index) {
       return true;
     }
 
@@ -247,9 +294,16 @@ export class Carousel extends React.Component<Props, State> {
     return (this.state.currentIndex === 0) ? this.state.slideCount - 1 : this.state.currentIndex - 1;
   }
 
+  getIndexDirection(index) {
+    if (this.state.currentIndex === index) return 0;
+    if (this.getPrevIndex() === index) return -1;
+    if (this.getNextIndex() === index) return 1;
+    if (this.state.currentIndex < index) return 1;
+    if (this.state.currentIndex > index) return -1;
+  }
+
   updateFrameRect() {
     const slideCount = React.Children.count(this.props.children);
-    const container = this.container;
     const slide = this.container.children[this.state.currentIndex];
     let slideHeight = 100;
     let slideWidth = 100;
@@ -269,62 +323,41 @@ export class Carousel extends React.Component<Props, State> {
     });
   }
 
-  next() {
-    if (this.swiping || this.moving) {
+  move(index: number) {
+    if (this.swiping || this.moving || this.state.currentIndex === index) {
       return;
     }
     this.moving = true;
     this.setState({
       animate: true,
-      showNextSlide: true,
+      showIndex: index
     }, () => {
       setTimeout(() => {
-        // animation
         this.setState({
-          swipePosition: -this.state.slideWidth
+          swipePosition: this.getIndexDirection(index) * -this.state.slideWidth
         }, () => {
           setTimeout(() => {
             this.setState({
               animate: false,
-              showNextSlide: false,
-              currentIndex: this.getNextIndex(),
+              currentIndex: index,
+              showIndex: null,
               swipePosition: 0
             }, () => {
               this.moving = false;
-            })
+              this.resetAutoSlide();
+            });
           }, this.props.duration);
         });
       });
     });
   }
 
+  next() {
+    this.move(this.getNextIndex());
+  }
+
   prev() {
-    if (this.swiping || this.moving) {
-      return;
-    }
-    this.moving = true;
-    this.setState({
-      animate: true,
-      showPrevSlide: true,
-    }, () => {
-      setTimeout(() => {
-        // animation
-        this.setState({
-          swipePosition: this.state.slideWidth
-        }, () => {
-          setTimeout(() => {
-            this.setState({
-              animate: false,
-              showPrevSlide: false,
-              currentIndex: this.getPrevIndex(),
-              swipePosition: 0
-            }, () => {
-              this.moving = false;
-            })
-          }, this.props.duration);
-        });
-      });
-    });
+    this.move(this.getPrevIndex());
   }
 
   initialize() {
@@ -332,15 +365,16 @@ export class Carousel extends React.Component<Props, State> {
       return;
     }
     this.updateFrameRect();
-    const imgs = this.container.getElementsByTagName('img');
-    for (let i = 0; i < imgs.length; i++) {
-      imgs[i].onload = () => {
+    const images = this.container.getElementsByTagName('img');
+    for (let i = 0; i < images.length; i++) {
+      images[i].onload = () => {
         this.updateFrameRect();
       };
     }
   }
 
   handleTouchStart(e) {
+    if (this.state.slideCount <= 1) return;
     if (this.moving) return;
     this.swiping = true;
     this.touch = {
@@ -357,6 +391,7 @@ export class Carousel extends React.Component<Props, State> {
   }
 
   handleTouchMove(e) {
+    if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     const swipeDirection = this.judgeSwipeDirection(
       this.touch.startX,
@@ -379,17 +414,18 @@ export class Carousel extends React.Component<Props, State> {
     };
 
     const diff = this.touch.endX - this.touch.startX;
-    const showNextSlide = this.touch.swipeDirection === 1;
-    const showPrevSlide = this.touch.swipeDirection === -1;
+    let showIndex;
+    if (this.touch.swipeDirection === 1) showIndex = this.getNextIndex();
+    if (this.touch.swipeDirection === -1) showIndex = this.getPrevIndex();
 
     this.setState({
       swipePosition: diff,
-      showNextSlide,
-      showPrevSlide
+      showIndex
     });
   }
 
   handleTouchEnd() {
+    if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     this.swiping = false;
     if (this.touch.swipeDirection === 1) {
