@@ -112,9 +112,10 @@ export class Carousel extends React.Component<Props, State> {
   }
 
   renderInitialRect() {
+    const firstChild = React.Children.toArray(this.props.children)[0];
     return (
       <li style={{width: '100%'}}>
-        {this.props.children[0]}
+        {firstChild}
       </li>
     );
   }
