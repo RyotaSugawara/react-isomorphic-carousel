@@ -276,10 +276,6 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       return true;
     }
 
-    if (!this.state.animate) {
-      return false;
-    }
-
     if (this.state.showIndex === index) {
       return true;
     }
@@ -349,7 +345,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
             });
           }, this.props.duration);
         });
-      });
+      }, 1000 / 60); // wait 1 frame (at 60fps) for animate
     });
   }
 
