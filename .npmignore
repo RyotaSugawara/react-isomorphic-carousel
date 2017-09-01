@@ -1,3 +1,8 @@
-example
+docs
+test
+node_modules
+tsconfig.json
+tslint.json
 webpack.config.js
 **/*.test.*
+**/.*
