@@ -1,4 +1,3 @@
 example
 webpack.config.js
-lib/*.test.js
-src/*.test.tsx
+**/*.test.*

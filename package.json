@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "description": "Isomorphic React Carousel Component.",
   "main": "lib/index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "start": "webpack-dev-server",
     "prepare": "npm run test && npm run build",

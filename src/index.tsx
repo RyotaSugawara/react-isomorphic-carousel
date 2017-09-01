@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface Touch {
+export interface Touch {
   startX: number;
   startY: number;
   endX: number;
@@ -8,7 +8,7 @@ interface Touch {
   swipeDirection: number;
 }
 
-interface Props {
+export interface CarouselProps {
   label?: string;
   useDots?: boolean;
   dotStyle?: any;
@@ -16,7 +16,7 @@ interface Props {
   autoSlideInterval?: number;
 }
 
-interface State {
+export interface CarouselState {
   animate: boolean,
   canUseDOM: boolean;
   currentIndex: number;
@@ -27,7 +27,7 @@ interface State {
   showIndex: number;
 }
 
-export class Carousel extends React.Component<Props, State> {
+export default class Carousel extends React.Component<CarouselProps, CarouselState> {
 
   container: Element;
   swiping: boolean;
@@ -35,7 +35,7 @@ export class Carousel extends React.Component<Props, State> {
   touch: Touch;
   timer;
 
-  state: State = {
+  state: CarouselState = {
     animate: false,
     canUseDOM: false,
     currentIndex: 0,
@@ -46,7 +46,7 @@ export class Carousel extends React.Component<Props, State> {
     showIndex: null
   };
 
-  static get defaultProps() {
+  static get defaultProps(): CarouselProps {
     return {
       label: '',
       useDots: false,
@@ -458,5 +458,3 @@ export class Carousel extends React.Component<Props, State> {
     return 0;
   }
 }
-
-export default Carousel;
