@@ -335,17 +335,20 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
         }, () => {
           setTimeout(() => {
             this.setState({
-              animate: false,
-              currentIndex: index,
-              showIndex: null,
               swipePosition: 0
             }, () => {
-              this.moving = false;
-              this.resetAutoSlide();
+              this.setState({
+                animate: false,
+                showIndex: null,
+                currentIndex: index,
+              }, () => {
+                this.moving = false;
+                this.resetAutoSlide();
+              });
             });
           }, this.props.duration);
         });
-      }, 1000 / 60); // wait 1 frame (at 60fps) for animate
+      }, 1000 / 60 * 2); // wait 2 frame (at 60fps) for animate
     });
   }
 
