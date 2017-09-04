@@ -232,7 +232,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   addEvents() {
     window.addEventListener('resize', this.onResize);
-    if (this.container) {
+    // do not fire on desktop or non touchable environment.
+    if (this.container && 'ontouchstart' in document) {
       this.container.addEventListener('touchstart', this.handleTouchStart);
       this.container.addEventListener('touchmove', this.handleTouchMove);
       this.container.addEventListener('touchend', this.handleTouchEnd);
@@ -242,7 +243,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   removeEvents() {
     window.removeEventListener('resize', this.onResize);
-    if (this.container) {
+    if (this.container && 'ontouchstart' in document) {
       this.container.removeEventListener('touchstart', this.handleTouchStart);
       this.container.removeEventListener('touchmove', this.handleTouchMove);
       this.container.removeEventListener('touchend', this.handleTouchEnd);
