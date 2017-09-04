@@ -40,8 +40,17 @@ class App extends React.Component {
     return (
       <div>
         <Carousel
+          style={{
+            width: 320
+          }}
+        >
+          <img src="//placehold.it/320x160?text=1of2" alt="a" />
+          <img src="//placehold.it/320x160?text=2of2" alt="a" />
+        </Carousel>
+        <Carousel
           ref={(instance) => { this.carousel = instance; }}
           autoSlideInterval={3000}
+          useDots={true}
         >
           {this.state.count.map((c) => {
             return (

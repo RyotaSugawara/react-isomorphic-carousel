@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "prepare": "npm run test && npm run build",
-    "build": "tsc",
+    "build": "tsc -d --declarationDir ./",
     "docs": "webpack -p",
     "test:dom": "USE_DOM=true ava **/*.dom.test.js",
     "test:node": "ava **/*.node.test.js",

@@ -11,9 +11,12 @@ export interface Touch {
 export interface CarouselProps {
   label?: string;
   useDots?: boolean;
-  dotStyle?: any;
+  dotStyle?: React.CSSProperties;
   duration?: number;
   autoSlideInterval?: number;
+  style?: React.CSSProperties;
+  nextComponent?: JSX.Element;
+  prevComponent?: JSX.Element;
 }
 
 export interface CarouselState {
@@ -32,6 +35,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   container: Element;
   swiping: boolean;
   moving: boolean;
+  direction: number;
   touch: Touch;
   timer;
 
@@ -99,14 +103,14 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       return null;
     }
     return (
-      <div>
+      <div style={this.props.style}>
         <ul
           ref={(node) => (this.container = node)}
           style={(this.state.canUseDOM) ? this.getFrameStyle() : { width: '100%' }}
         >
           {this.renderCarouselChild()}
         </ul>
-        {this.renderDots()}
+        {this.renderControls()}
       </div>
     );
   }
@@ -136,7 +140,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  renderDots() {
+  renderControls() {
     if (!this.props.useDots || this.state.slideCount <= 1) {
       return null;
     }
@@ -242,7 +246,14 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     const canDisplay = this.canDisplaySlide(index);
     const duration = this.swiping ? 0 : this.props.duration / 1000; // to milisec
     const transition = this.state.animate ? `transform ${duration}s ease` : null;
-    const direction = this.getIndexDirection(index);
+    let direction = this.getIndexDirection(index);
+    if (direction) {
+      if (this.touch) {
+        direction = this.touch.swipeDirection;
+      } else if (this.direction) {
+        direction = this.direction;
+      }
+    }
     let transform, msTransform;
     if (canDisplay) {
       if (direction === 0) {
@@ -293,8 +304,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   getIndexDirection(index) {
     if (this.state.currentIndex === index) return 0;
-    if (this.getPrevIndex() === index) return -1;
     if (this.getNextIndex() === index) return 1;
+    if (this.getPrevIndex() === index) return -1;
     if (this.state.currentIndex < index) return 1;
     if (this.state.currentIndex > index) return -1;
   }
@@ -320,10 +331,11 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  move(index: number) {
+  move(index: number, direction: number = this.getIndexDirection(index)) {
     if (this.swiping || this.moving || this.state.currentIndex === index) {
       return;
     }
+    this.direction = direction;
     this.moving = true;
     this.setState({
       animate: true,
@@ -331,7 +343,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     }, () => {
       setTimeout(() => {
         this.setState({
-          swipePosition: this.getIndexDirection(index) * -this.state.slideWidth
+          swipePosition: direction * -this.state.slideWidth
         }, () => {
           setTimeout(() => {
             this.setState({
@@ -353,11 +365,11 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   }
 
   next() {
-    this.move(this.getNextIndex());
+    this.move(this.getNextIndex(), 1);
   }
 
   prev() {
-    this.move(this.getPrevIndex());
+    this.move(this.getPrevIndex(), -1);
   }
 
   initialize() {

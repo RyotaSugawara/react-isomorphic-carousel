@@ -10,9 +10,12 @@ export interface Touch {
 export interface CarouselProps {
     label?: string;
     useDots?: boolean;
-    dotStyle?: any;
+    dotStyle?: React.CSSProperties;
     duration?: number;
     autoSlideInterval?: number;
+    style?: React.CSSProperties;
+    nextComponent?: JSX.Element;
+    prevComponent?: JSX.Element;
 }
 export interface CarouselState {
     animate: boolean;
@@ -28,6 +31,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     container: Element;
     swiping: boolean;
     moving: boolean;
+    direction: number;
     touch: Touch;
     timer: any;
     state: CarouselState;
@@ -40,7 +44,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     render(): JSX.Element;
     renderInitialRect(): JSX.Element;
     renderCarouselChild(): JSX.Element | JSX.Element[];
-    renderDots(): JSX.Element;
+    renderControls(): JSX.Element;
     autoSlide(): void;
     resetAutoSlide(): void;
     addEvents(): void;
@@ -53,7 +57,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     getPrevIndex(): number;
     getIndexDirection(index: any): 0 | 1 | -1;
     updateFrameRect(): void;
-    move(index: number): void;
+    move(index: number, direction?: number): void;
     next(): void;
     prev(): void;
     initialize(): void;

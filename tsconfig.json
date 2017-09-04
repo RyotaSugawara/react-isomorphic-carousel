@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "./",
     "allowUnreachableCode": true,
     "allowUnusedLabels": true,
     "sourceMap": true,
