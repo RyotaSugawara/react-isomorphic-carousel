@@ -1,6 +1,6 @@
 {
   "name": "@ryo_suga/react-isomorphic-carousel",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Isomorphic React Carousel Component.",
   "main": "lib/index.js",
   "types": "./index.d.ts",
