@@ -15,8 +15,7 @@ export interface CarouselProps {
   duration?: number;
   autoSlideInterval?: number;
   style?: React.CSSProperties;
-  nextComponent?: JSX.Element;
-  prevComponent?: JSX.Element;
+  useControl?: boolean;
 }
 
 export interface CarouselState {
@@ -30,8 +29,16 @@ export interface CarouselState {
   showIndex: number;
 }
 
+const CONTROLS_STYLE = {
+  display: 'inline-block',
+  listStyle: 'none'
+};
+
+let id = 0;
+
 export default class Carousel extends React.Component<CarouselProps, CarouselState> {
 
+  id: number;
   container: Element;
   swiping: boolean;
   moving: boolean;
@@ -56,12 +63,14 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       useDots: false,
       dotStyle: {},
       duration: 500, // ms
-      autoSlideInterval: 0, // ms
+      autoSlideInterval: 0, // ms,
+      useControl: false
     };
   }
 
   constructor() {
     super();
+    this.id = id++;
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
     this.onResize = this.onResize.bind(this);
@@ -118,7 +127,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   renderInitialRect() {
     const firstChild = React.Children.toArray(this.props.children)[0];
     return (
-      <li style={{width: '100%'}}>
+      <li style={{ width: '100%' }}>
         {firstChild}
       </li>
     );
@@ -151,16 +160,16 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
           textAlign: 'center'
         }}
       >
+        {this.props.useControl ? (
+          <li style={CONTROLS_STYLE}>{this.renderPrevButton(this.prev)}</li>
+        ) : null}
         {React.Children.map(this.props.children, (child: any, index) => {
           const isActive = this.state.currentIndex === index;
           return (
             <li
               className="Carousel_Dot"
-              key={`dot-${child.key}`}
-              style={{
-                display: 'inline-block',
-                listStyleType: 'none'
-              }}
+              key={`dot-${this.id}-${index}`}
+              style={CONTROLS_STYLE}
             >
               <button
                 onClick={() => this.move(index)}
@@ -181,7 +190,26 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
             </li>
           );
         })}
+        {this.props.useControl ? (
+          <li style={CONTROLS_STYLE}>{this.renderNextButton(this.next)}</li>
+        ) : null}
       </ul>
+    );
+  }
+
+  renderNextButton(action) {
+    return (
+      <button onClick={action} aria-label={`Move ${this.props.label} carousel current index to next.`}>
+        &gt;
+      </button>
+    );
+  }
+
+  renderPrevButton(action) {
+    return (
+      <button onClick={action} aria-label={`Move ${this.props.label} carousel current index to prev.`}>
+        &lt;
+      </button>
     );
   }
 

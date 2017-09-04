@@ -14,8 +14,7 @@ export interface CarouselProps {
     duration?: number;
     autoSlideInterval?: number;
     style?: React.CSSProperties;
-    nextComponent?: JSX.Element;
-    prevComponent?: JSX.Element;
+    useControl?: boolean;
 }
 export interface CarouselState {
     animate: boolean;
@@ -28,6 +27,7 @@ export interface CarouselState {
     showIndex: number;
 }
 export default class Carousel extends React.Component<CarouselProps, CarouselState> {
+    id: number;
     container: Element;
     swiping: boolean;
     moving: boolean;
@@ -45,6 +45,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     renderInitialRect(): JSX.Element;
     renderCarouselChild(): JSX.Element | JSX.Element[];
     renderControls(): JSX.Element;
+    renderNextButton(action: any): JSX.Element;
+    renderPrevButton(action: any): JSX.Element;
     autoSlide(): void;
     resetAutoSlide(): void;
     addEvents(): void;

@@ -51,6 +51,7 @@ class App extends React.Component {
           ref={(instance) => { this.carousel = instance; }}
           autoSlideInterval={3000}
           useDots={true}
+          useControl={true}
         >
           {this.state.count.map((c) => {
             return (
