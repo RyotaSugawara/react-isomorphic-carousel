@@ -12,6 +12,7 @@ export interface CarouselProps {
   label?: string;
   useDots?: boolean;
   dotStyle?: React.CSSProperties;
+  activeDotStyle?: React.CSSProperties;
   duration?: number;
   autoSlideInterval?: number;
   style?: React.CSSProperties;
@@ -33,6 +34,15 @@ const CONTROLS_STYLE = {
   display: 'inline-block',
   listStyle: 'none'
 };
+
+const DEFAULT_BUTTONS_STYLE = {
+  lineHeight: 10,
+  border: 0,
+  borderRadius: '10px',
+  padding: 5,
+  margin: '0 4px',
+  cursor: 'pointer',
+}
 
 let id = 0;
 
@@ -62,6 +72,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       label: '',
       useDots: false,
       dotStyle: {},
+      activeDotStyle: {},
       duration: 500, // ms
       autoSlideInterval: 0, // ms,
       useControl: false
@@ -150,6 +161,16 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   }
 
   renderControls() {
+    const BUTTON_STYLE = {
+      ...DEFAULT_BUTTONS_STYLE,
+      background: '#ccc',
+      ...this.props.dotStyle
+    }
+    const ACTIVE_BUTTON_STYLE = {
+      ...DEFAULT_BUTTONS_STYLE,
+      background: '#000',
+      ...this.props.activeDotStyle
+    }
     if (!this.props.useDots || this.state.slideCount <= 1) {
       return null;
     }
@@ -176,16 +197,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
                 aria-label={`Move ${this.props.label} carousel current index to ${index}.`}
                 className="Carousel_Dot_Button"
                 disabled={isActive}
-                style={{
-                  background: isActive ? '#000' : '#ccc',
-                  lineHeight: 10,
-                  border: 0,
-                  borderRadius: '10px',
-                  padding: 5,
-                  margin: '0 4px',
-                  cursor: 'pointer',
-                  ...this.props.dotStyle
-                }}
+                style={ isActive ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE }
               />
             </li>
           );
