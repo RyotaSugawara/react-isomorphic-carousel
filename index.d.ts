@@ -27,17 +27,15 @@ export interface CarouselState {
     showIndex: number;
 }
 export default class Carousel extends React.Component<CarouselProps, CarouselState> {
-    id: number;
+    id: string;
     container: Element;
     swiping: boolean;
     moving: boolean;
     direction: number;
     touch: Touch;
     timer: any;
-    state: CarouselState;
     static readonly defaultProps: CarouselProps;
     constructor(props: any);
-    componentWillMount(): void;
     componentDidMount(): void;
     componentDidUpdate(prevProps: any): void;
     componentWillUnmount(): void;
@@ -51,7 +49,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     resetAutoSlide(): void;
     addEvents(): void;
     removeEvents(): void;
-    onResize(): void;
+    onResize: () => void;
     getFrameStyle(): any;
     getSlideStyle(index: any): any;
     canDisplaySlide(index: any): boolean;
@@ -742,11 +740,11 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     };
     updateFrameRect(): void;
     move(index: number, direction?: number): void;
-    next(): void;
-    prev(): void;
+    next: () => void;
+    prev: () => void;
     initialize(): void;
-    handleTouchStart(e: any): void;
-    handleTouchMove(e: any): boolean;
-    handleTouchEnd(): void;
+    handleTouchStart: (e: any) => void;
+    handleTouchMove: (e: any) => boolean;
+    handleTouchEnd: () => void;
     judgeSwipeDirection(startX: number, startY: number, endX: number, endY: number): 0 | 1 | -1;
 }
