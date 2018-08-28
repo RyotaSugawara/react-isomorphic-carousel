@@ -11,6 +11,7 @@ export interface CarouselProps {
     label?: string;
     useDots?: boolean;
     dotStyle?: React.CSSProperties;
+    activeDotStyle?: React.CSSProperties;
     duration?: number;
     autoSlideInterval?: number;
     style?: React.CSSProperties;

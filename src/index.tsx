@@ -12,6 +12,7 @@ export interface CarouselProps {
   label?: string;
   useDots?: boolean;
   dotStyle?: React.CSSProperties;
+  activeDotStyle?: React.CSSProperties;
   duration?: number;
   autoSlideInterval?: number;
   style?: React.CSSProperties;
@@ -33,6 +34,18 @@ const CONTROLS_STYLE = {
   display: 'inline-block',
   listStyle: 'none'
 };
+
+const DEFAULT_BUTTONS_STYLE = {
+  lineHeight: 10,
+  border: 0,
+  borderRadius: '10px',
+  padding: 5,
+  margin: '0 4px',
+  cursor: 'pointer',
+};
+
+const DEFAULT_BUTTON_COLOR = '#ccc';
+const ACTIVE_BUTTON_COLOR = '#000';
 
 let id = 0;
 
@@ -62,6 +75,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       label: '',
       useDots: false,
       dotStyle: {},
+      activeDotStyle: {},
       duration: 500, // ms
       autoSlideInterval: 0, // ms,
       useControl: false
@@ -176,16 +190,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
                 aria-label={`Move ${this.props.label} carousel current index to ${index}.`}
                 className="Carousel_Dot_Button"
                 disabled={isActive}
-                style={{
-                  background: isActive ? '#000' : '#ccc',
-                  lineHeight: 10,
-                  border: 0,
-                  borderRadius: '10px',
-                  padding: 5,
-                  margin: '0 4px',
-                  cursor: 'pointer',
-                  ...this.props.dotStyle
-                }}
+                style={this.getButtonStyle(isActive)}
               />
             </li>
           );
@@ -337,6 +342,16 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     if (this.getPrevIndex() === index) return -1;
     if (this.state.currentIndex < index) return 1;
     if (this.state.currentIndex > index) return -1;
+  }
+
+  getButtonStyle(isActive) {
+    const color = isActive ? ACTIVE_BUTTON_COLOR : DEFAULT_BUTTON_COLOR;
+    const style = isActive ? this.props.activeDotStyle : this.props.dotStyle;
+    return {
+      ...DEFAULT_BUTTONS_STYLE,
+      'background': color,
+      ...style
+    }
   }
 
   updateFrameRect() {

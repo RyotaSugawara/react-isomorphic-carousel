@@ -36,6 +36,7 @@ React.render(
 |-------------------|---------------------|-----------------------------------------------------------------------------------|
 | useDots           | boolean             | use dots or not. (default false)                                                  |
 | dotStyle          | React.CSSProperties | custom css properties for dot button. (default {})                                |
+| activeDotStyle     | React.CSSProperties | custom css properties for the active dot button. (default {})                    |
 | duration          | number              | miliseconds for animation speed. (default 500)                                    |
 | autoSlideInterval | number              | miliseconds for auto slide. if 0 or less than 0, auto slide disabled. (default 0) |
 
