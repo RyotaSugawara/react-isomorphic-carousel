@@ -82,8 +82,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     };
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.id = id++;
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);

@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  mode: 'development',
   entry: path.resolve(__dirname, './docs/index.tsx'),
   output: {
     path: path.resolve(__dirname, './docs'),
