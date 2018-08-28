@@ -47,28 +47,15 @@ const DEFAULT_BUTTONS_STYLE = {
 const DEFAULT_BUTTON_COLOR = '#ccc';
 const ACTIVE_BUTTON_COLOR = '#000';
 
-let id = 0;
-
 export default class Carousel extends React.Component<CarouselProps, CarouselState> {
 
-  id: number;
+  id: string;
   container: Element;
   swiping: boolean;
   moving: boolean;
   direction: number;
   touch: Touch;
   timer;
-
-  state: CarouselState = {
-    animate: false,
-    canUseDOM: false,
-    currentIndex: 0,
-    slideCount: 0,
-    slideWidth: null,
-    slideHeight: null,
-    swipePosition: 0,
-    showIndex: null
-  };
 
   static get defaultProps(): CarouselProps {
     return {
@@ -84,24 +71,20 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   constructor(props) {
     super(props);
-    this.id = id++;
-    this.next = this.next.bind(this);
-    this.prev = this.prev.bind(this);
-    this.onResize = this.onResize.bind(this);
-    this.handleTouchEnd = this.handleTouchEnd.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
-    this.handleTouchStart = this.handleTouchStart.bind(this);
-  }
 
-  /* Lifecycle Methods */
-  componentWillMount() {
-    // CAUTION: Do not use dom methods in this method!
     const slideCount = React.Children.count(this.props.children);
-
-    this.setState({
+    this.state = {
+      animate: false,
       canUseDOM: false,
-      slideCount
-    });
+      currentIndex: 0,
+      slideCount,
+      slideWidth: null,
+      slideHeight: null,
+      swipePosition: 0,
+      showIndex: null
+    };
+
+    this.id = Math.floor(Math.random() * 1000000000000 + Date.now()).toString(16);
   }
 
   componentDidMount() {
@@ -260,7 +243,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     }
   }
 
-  onResize() {
+  onResize = () => {
     this.updateFrameRect();
   }
 
@@ -408,11 +391,11 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  next() {
+  next = () => {
     this.move(this.getNextIndex(), 1);
   }
 
-  prev() {
+  prev = () => {
     this.move(this.getPrevIndex(), -1);
   }
 
@@ -429,7 +412,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     }
   }
 
-  handleTouchStart(e) {
+  handleTouchStart = (e) => {
     if (this.state.slideCount <= 1) return;
     if (this.moving) return;
     this.swiping = true;
@@ -446,7 +429,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  handleTouchMove(e) {
+  handleTouchMove = (e) => {
     if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     const swipeDirection = this.judgeSwipeDirection(
@@ -480,7 +463,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  handleTouchEnd() {
+  handleTouchEnd = () => {
     if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     this.swiping = false;
