@@ -8,8 +8,8 @@ class App extends React.Component {
   state = {
     count: ['abcd']
   };
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
   }
