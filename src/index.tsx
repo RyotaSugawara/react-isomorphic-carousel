@@ -42,7 +42,10 @@ const DEFAULT_BUTTONS_STYLE = {
   padding: 5,
   margin: '0 4px',
   cursor: 'pointer',
-}
+};
+
+const DEFAULT_BUTTON_COLOR = '#ccc';
+const ACTIVE_BUTTON_COLOR = '#000';
 
 let id = 0;
 
@@ -161,16 +164,6 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   }
 
   renderControls() {
-    const BUTTON_STYLE = {
-      ...DEFAULT_BUTTONS_STYLE,
-      background: '#ccc',
-      ...this.props.dotStyle
-    }
-    const ACTIVE_BUTTON_STYLE = {
-      ...DEFAULT_BUTTONS_STYLE,
-      background: '#000',
-      ...this.props.activeDotStyle
-    }
     if (!this.props.useDots || this.state.slideCount <= 1) {
       return null;
     }
@@ -197,7 +190,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
                 aria-label={`Move ${this.props.label} carousel current index to ${index}.`}
                 className="Carousel_Dot_Button"
                 disabled={isActive}
-                style={ isActive ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE }
+                style={this.getButtonStyle(isActive)}
               />
             </li>
           );
@@ -349,6 +342,16 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     if (this.getPrevIndex() === index) return -1;
     if (this.state.currentIndex < index) return 1;
     if (this.state.currentIndex > index) return -1;
+  }
+
+  getButtonStyle(isActive) {
+    const color = isActive ? ACTIVE_BUTTON_COLOR : DEFAULT_BUTTON_COLOR;
+    const style = isActive ? this.props.activeDotStyle : this.props.dotStyle;
+    return {
+      ...DEFAULT_BUTTONS_STYLE,
+      'background': color,
+      ...style
+    }
   }
 
   updateFrameRect() {
