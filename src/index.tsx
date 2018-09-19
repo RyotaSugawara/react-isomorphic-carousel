@@ -327,7 +327,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     if (this.state.currentIndex > index) return -1;
   }
 
-  getButtonStyle(isActive) {
+  getButtonStyle(isActive): React.CSSProperties {
     const color = isActive ? ACTIVE_BUTTON_COLOR : DEFAULT_BUTTON_COLOR;
     const style = isActive ? this.props.activeDotStyle : this.props.dotStyle;
     return {
