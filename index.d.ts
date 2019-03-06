@@ -55,7 +55,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     canDisplaySlide(index: any): boolean;
     getNextIndex(): number;
     getPrevIndex(): number;
-    getIndexDirection(index: any): 0 | 1 | -1;
+    getIndexDirection(index: any): 1 | 0 | -1;
     getButtonStyle(isActive: any): React.CSSProperties;
     updateFrameRect(): void;
     move(index: number, direction?: number): void;
@@ -65,5 +65,5 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     handleTouchStart: (e: any) => void;
     handleTouchMove: (e: any) => boolean;
     handleTouchEnd: () => void;
-    judgeSwipeDirection(startX: number, startY: number, endX: number, endY: number): 0 | 1 | -1;
+    judgeSwipeDirection(startX: number, startY: number, endX: number, endY: number): 1 | 0 | -1;
 }

@@ -71,8 +71,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   constructor(props) {
     super(props);
-
     const slideCount = React.Children.count(this.props.children);
+
     this.state = {
       animate: false,
       canUseDOM: false,
