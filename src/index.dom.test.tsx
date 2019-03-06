@@ -1,6 +1,7 @@
 import test from 'ava';
 import * as React from 'react';
 import * as ReactTestRenderer from 'react-test-renderer';
+import '../test/helpers/setup-browser-env.js';
 import Carousel from './index';
 
 test('should render', (t) => {

@@ -12,6 +12,7 @@ export interface CarouselProps {
   label?: string;
   useDots?: boolean;
   dotStyle?: React.CSSProperties;
+  activeDotStyle?: React.CSSProperties;
   duration?: number;
   autoSlideInterval?: number;
   style?: React.CSSProperties;
@@ -34,11 +35,21 @@ const CONTROLS_STYLE = {
   listStyle: 'none'
 };
 
-let id = 0;
+const DEFAULT_BUTTONS_STYLE = {
+  lineHeight: 10,
+  border: 0,
+  borderRadius: '10px',
+  padding: 5,
+  margin: '0 4px',
+  cursor: 'pointer',
+};
+
+const DEFAULT_BUTTON_COLOR = '#ccc';
+const ACTIVE_BUTTON_COLOR = '#000';
 
 export default class Carousel extends React.Component<CarouselProps, CarouselState> {
 
-  id: number;
+  id: string;
   container: Element;
   swiping: boolean;
   moving: boolean;
@@ -51,6 +62,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       label: '',
       useDots: false,
       dotStyle: {},
+      activeDotStyle: {},
       duration: 500, // ms
       autoSlideInterval: 0, // ms,
       useControl: false
@@ -59,15 +71,6 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
 
   constructor(props) {
     super(props);
-    this.id = id++;
-    this.next = this.next.bind(this);
-    this.prev = this.prev.bind(this);
-    this.onResize = this.onResize.bind(this);
-    this.handleTouchEnd = this.handleTouchEnd.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
-    this.handleTouchStart = this.handleTouchStart.bind(this);
-
-    // CAUTION: Do not use dom methods in this method!
     const slideCount = React.Children.count(this.props.children);
 
     this.state = {
@@ -80,6 +83,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
       swipePosition: 0,
       showIndex: null
     };
+
+    this.id = Math.floor(Math.random() * 1000000000000 + Date.now()).toString(16);
   }
 
   componentDidMount() {
@@ -168,16 +173,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
                 aria-label={`Move ${this.props.label} carousel current index to ${index}.`}
                 className="Carousel_Dot_Button"
                 disabled={isActive}
-                style={{
-                  background: isActive ? '#000' : '#ccc',
-                  lineHeight: 10,
-                  border: 0,
-                  borderRadius: '10px',
-                  padding: 5,
-                  margin: '0 4px',
-                  cursor: 'pointer',
-                  ...this.props.dotStyle
-                }}
+                style={this.getButtonStyle(isActive)}
               />
             </li>
           );
@@ -247,7 +243,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     }
   }
 
-  onResize() {
+  onResize = () => {
     this.updateFrameRect();
   }
 
@@ -331,6 +327,16 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     if (this.state.currentIndex > index) return -1;
   }
 
+  getButtonStyle(isActive): React.CSSProperties {
+    const color = isActive ? ACTIVE_BUTTON_COLOR : DEFAULT_BUTTON_COLOR;
+    const style = isActive ? this.props.activeDotStyle : this.props.dotStyle;
+    return {
+      ...DEFAULT_BUTTONS_STYLE,
+      'background': color,
+      ...style
+    }
+  }
+
   updateFrameRect() {
     const slideCount = React.Children.count(this.props.children);
     const slide = this.container.children[this.state.currentIndex];
@@ -385,11 +391,11 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  next() {
+  next = () => {
     this.move(this.getNextIndex(), 1);
   }
 
-  prev() {
+  prev = () => {
     this.move(this.getPrevIndex(), -1);
   }
 
@@ -406,7 +412,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     }
   }
 
-  handleTouchStart(e) {
+  handleTouchStart = (e) => {
     if (this.state.slideCount <= 1) return;
     if (this.moving) return;
     this.swiping = true;
@@ -423,7 +429,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  handleTouchMove(e) {
+  handleTouchMove = (e) => {
     if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     const swipeDirection = this.judgeSwipeDirection(
@@ -457,7 +463,7 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     });
   }
 
-  handleTouchEnd() {
+  handleTouchEnd = () => {
     if (this.state.slideCount <= 1) return;
     if (this.moving || !this.touch) return;
     this.swiping = false;
