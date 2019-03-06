@@ -46,17 +46,6 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
   touch: Touch;
   timer;
 
-  state: CarouselState = {
-    animate: false,
-    canUseDOM: false,
-    currentIndex: 0,
-    slideCount: 0,
-    slideWidth: null,
-    slideHeight: null,
-    swipePosition: 0,
-    showIndex: null
-  };
-
   static get defaultProps(): CarouselProps {
     return {
       label: '',
@@ -68,8 +57,8 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     };
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.id = id++;
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
@@ -77,17 +66,20 @@ export default class Carousel extends React.Component<CarouselProps, CarouselSta
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchStart = this.handleTouchStart.bind(this);
-  }
 
-  /* Lifecycle Methods */
-  componentWillMount() {
     // CAUTION: Do not use dom methods in this method!
     const slideCount = React.Children.count(this.props.children);
 
-    this.setState({
+    this.state = {
+      animate: false,
       canUseDOM: false,
-      slideCount
-    });
+      currentIndex: 0,
+      slideCount,
+      slideWidth: null,
+      slideHeight: null,
+      swipePosition: 0,
+      showIndex: null
+    };
   }
 
   componentDidMount() {
